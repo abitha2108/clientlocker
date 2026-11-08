@@ -1,0 +1,283 @@
+/* ==========================================================================
+   ClientLocker - Premium Dark Navy Footer
+   Design System: #0B1220 Background | Electric Blue & Cyan Accents
+   Client: Vaigai Vel & Associates
+   ========================================================================== */
+
+.main-footer {
+  position: relative;
+  width: 100%;
+  background: var(--dark-bg);
+  color: #F8FAFC;
+  padding: 88px 24px 36px;
+  border-top: 1px solid rgba(226, 232, 240, 0.1);
+  overflow: hidden;
+}
+
+.footer-top-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #2563EB 25%, #22D3EE 50%, #2563EB 75%, transparent 100%);
+  opacity: 0.9;
+}
+
+.footer-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr 1fr 1.1fr;
+  gap: 48px;
+}
+
+/* --------------------------------------------------------------------------
+   Brand Section
+   -------------------------------------------------------------------------- */
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  margin-bottom: 18px;
+}
+
+.footer-brand-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+}
+
+.footer-brand-name {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.footer-brand-accent {
+  background: linear-gradient(135deg, #2563EB 0%, #22D3EE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.footer-description {
+  color: #94A3B8;
+  font-size: 14.5px;
+  line-height: 1.75;
+  max-width: 360px;
+  margin-bottom: 22px;
+}
+
+.footer-description strong {
+  color: #F8FAFC;
+  font-weight: 600;
+}
+
+.footer-security-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  border-radius: var(--radius-sm);
+  color: #22D3EE;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: 0.2px;
+}
+
+.security-badge-icon {
+  color: var(--success);
+}
+
+.footer-firm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.7);
+}
+
+/* --------------------------------------------------------------------------
+   Links & Sections
+   -------------------------------------------------------------------------- */
+.footer-heading {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #F8FAFC;
+  margin-bottom: 20px;
+}
+
+.footer-links-list,
+.footer-categories-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-links-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14.5px;
+  color: #94A3B8;
+  transition: all 0.2s ease;
+}
+
+.footer-links-list a:hover {
+  color: #22D3EE;
+  transform: translateX(3px);
+}
+
+.link-arrow {
+  opacity: 0;
+  transform: translate(-3px, 3px);
+  transition: all 0.2s ease;
+}
+
+.footer-links-list a:hover .link-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.footer-categories-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #94A3B8;
+  line-height: 1.5;
+}
+
+.cat-icon {
+  color: #22D3EE;
+  flex-shrink: 0;
+}
+
+/* Contact Card */
+.footer-contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: rgba(16, 25, 44, 0.6);
+  border: 1px solid rgba(226, 232, 240, 0.1);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.contact-icon {
+  color: var(--primary-blue);
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.footer-contact-item strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #F8FAFC;
+}
+
+.footer-contact-item span {
+  display: block;
+  font-size: 12px;
+  color: #64748B;
+  margin-top: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Bottom Footer
+   -------------------------------------------------------------------------- */
+.footer-bottom {
+  margin-top: 60px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(226, 232, 240, 0.08);
+}
+
+.footer-bottom-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-copyright {
+  font-size: 13px;
+  color: #64748B;
+}
+
+.footer-bottom-notes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.footer-bullet {
+  color: #334155;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-footer {
+    padding: 64px 20px 32px;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .footer-bottom-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
