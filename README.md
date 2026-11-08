@@ -137,7 +137,7 @@ clientlocker/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/gowtham-gk-jj/clientlocker.git
+git clone https://github.com/abitha2108/clientlocker.git
 ```
 
 ### 2. Navigate to Frontend
