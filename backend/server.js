@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const multer = require("multer");
 
-// Load environment variables before importing application modules.
+// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -49,63 +49,62 @@ for (const [name, route] of routes) {
 // CORS CONFIGURATION
 // ======================================
 
-// Supports multiple frontend URLs separated by commas.
 const allowedOrigins = (process.env.FRONTEND_URL || "")
   .split(",")
   .map((origin) => origin.trim().replace(/\/+$/, ""))
   .filter(Boolean);
 
-// Allow localhost only when explicitly enabled.
+// Allow local development when explicitly enabled.
 if (process.env.ALLOW_LOCAL_FRONTEND === "true") {
   allowedOrigins.push("http://localhost:5173");
 }
 
 console.log("Allowed frontend origins:", allowedOrigins);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests without an Origin header,
-      // such as direct server-to-server requests.
-      if (!origin) {
-        return callback(null, true);
-      }
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests without an Origin header.
+    if (!origin) {
+      return callback(null, true);
+    }
 
-      const normalizedOrigin = origin.replace(/\/+$/, "");
+    const normalizedOrigin = origin.replace(/\/+$/, "");
 
-      if (allowedOrigins.includes(normalizedOrigin)) {
-        return callback(null, true);
-      }
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
 
-      console.warn("Blocked CORS origin:", origin);
+    console.warn("Blocked CORS origin:", origin);
 
-      return callback(new Error("Origin not allowed by CORS."));
-    },
+    return callback(new Error("Origin not allowed by CORS."));
+  },
 
-    methods: [
-      "GET",
-      "POST",
-      "PUT",
-      "PATCH",
-      "DELETE",
-      "OPTIONS"
-    ],
+  methods: [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS"
+  ],
 
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization"
-    ],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization"
+  ],
 
-    credentials: true,
-    optionsSuccessStatus: 204
-  })
-);
+  credentials: true,
+  optionsSuccessStatus: 204
+};
 
 // ======================================
 // SECURITY MIDDLEWARE
 // ======================================
 
 app.use(helmet());
+
+// CORS must run before API routes.
+app.use(cors(corsOptions));
 
 // ======================================
 // REQUEST PARSING
@@ -251,7 +250,7 @@ app.use((error, req, res, next) => {
     });
   }
 
-  // Client-side validation errors.
+  // Client validation errors.
   if (error.statusCode && error.statusCode < 500) {
     return res.status(error.statusCode).json({
       success: false,
@@ -301,8 +300,9 @@ const startServer = async () => {
       console.log("CLIENTLOCKER BACKEND STARTED");
       console.log("====================================");
       console.log(`Port: ${PORT}`);
+      console.log(`Frontend: ${allowedOrigins.join(", ")}`);
       console.log("Health: /api/health");
-      console.log("Auth: /api/auth");
+      console.log("Authentication: /api/auth");
       console.log("Demo: /api/demo");
       console.log("Clients: /api");
       console.log("Files: /api");
