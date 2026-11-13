@@ -1,7 +1,7 @@
 
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL ||
-  "https://clientlocker.onrender.com"
+  "https://clientlocker-qfz5.onrender.com"
 ).replace(/\/+$/, "");
 
 // ==========================================
@@ -63,8 +63,7 @@ export const loginUser = async (credentials) => {
   });
 };
 
-// Development-only demo login.
-// This endpoint must be enabled on the backend.
+// Development-only demo login
 export const demoLoginUser = async (credentials) => {
   return apiRequest("/api/auth/test-login", {
     method: "POST",
@@ -75,7 +74,7 @@ export const demoLoginUser = async (credentials) => {
   });
 };
 
-// Google login — requires the Google route on the backend.
+// Google login
 export const googleLoginUser = async (credential) => {
   return apiRequest("/api/auth/google", {
     method: "POST",
@@ -92,7 +91,6 @@ export const getCurrentUser = async () => {
 
 // ==========================================
 // CLIENT MAGIC-LINK APIs
-// Requires magic-link routes on the backend.
 // ==========================================
 
 export const requestMagicLink = async (email) => {
@@ -140,6 +138,7 @@ export const uploadClientFile = async (
   }
 
   const formData = new FormData();
+
   formData.append("file", file);
 
   if (checklistItemId) {
@@ -154,7 +153,6 @@ export const uploadClientFile = async (
 
 // ==========================================
 // SECURE DOWNLOAD APIs
-// Requires download routes on the backend.
 // ==========================================
 
 // Generate a temporary download link
@@ -261,7 +259,6 @@ export const openFileInBrowser = (blob, fileName) => {
 
 // ==========================================
 // CHECKLIST APIs
-// Requires checklist routes on the backend.
 // ==========================================
 
 export const getClientChecklist = async (clientId) => {
