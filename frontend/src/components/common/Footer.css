@@ -1,6 +1,6 @@
 /* ==========================================================================
-   ClientLocker - Premium Dark Navy Footer
-   Design System: #0B1220 Background | Electric Blue & Cyan Accents
+   ClientLocker - Premium Forest & Mint Footer
+   Design System: Deep Forest Green Background | Mint & Lime Accents
    Client: Vaigai Vel & Associates
    ========================================================================== */
 
@@ -8,9 +8,9 @@
   position: relative;
   width: 100%;
   background: var(--dark-bg);
-  color: #F8FAFC;
+  color: #F5FBF7;
   padding: 88px 24px 36px;
-  border-top: 1px solid rgba(226, 232, 240, 0.1);
+  border-top: 1px solid rgba(220, 237, 226, 0.15);
   overflow: hidden;
 }
 
@@ -20,7 +20,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #2563EB 25%, #22D3EE 50%, #2563EB 75%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, #39B96B 25%, #8DE5A5 50%, #A8E85F 75%, transparent 100%);
   opacity: 0.9;
 }
 
@@ -50,10 +50,10 @@
   display: grid;
   place-items: center;
   color: #ffffff;
-  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  background: linear-gradient(135deg, #39B96B 0%, #269B55 100%);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  box-shadow: 0 4px 14px rgba(57, 185, 107, 0.4);
+  border: 1px solid rgba(184, 242, 208, 0.35);
 }
 
 .footer-brand-name {
@@ -65,13 +65,13 @@
 }
 
 .footer-brand-accent {
-  background: linear-gradient(135deg, #2563EB 0%, #22D3EE 100%);
+  background: linear-gradient(135deg, #8DE5A5 0%, #B8F2D0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .footer-description {
-  color: #94A3B8;
+  color: #B8EDE0;
   font-size: 14.5px;
   line-height: 1.75;
   max-width: 360px;
@@ -79,7 +79,7 @@
 }
 
 .footer-description strong {
-  color: #F8FAFC;
+  color: #FFFFFF;
   font-weight: 600;
 }
 
@@ -88,10 +88,10 @@
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(37, 99, 235, 0.12);
-  border: 1px solid rgba(34, 211, 238, 0.25);
+  background: rgba(184, 242, 208, 0.12);
+  border: 1px solid rgba(141, 229, 165, 0.28);
   border-radius: var(--radius-sm);
-  color: #22D3EE;
+  color: #B8F2D0;
   font-family: var(--font-heading);
   font-size: 12px;
   font-weight: 600;
@@ -100,7 +100,7 @@
 }
 
 .security-badge-icon {
-  color: var(--success);
+  color: #A8E85F;
 }
 
 .footer-firm-pill {
@@ -108,7 +108,7 @@
   align-items: center;
   gap: 8px;
   font-size: 12.5px;
-  color: #64748B;
+  color: #819B8C;
   font-weight: 500;
 }
 
@@ -116,8 +116,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--success);
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.7);
+  background: #A8E85F;
+  box-shadow: 0 0 6px rgba(168, 232, 95, 0.8);
 }
 
 /* --------------------------------------------------------------------------
@@ -129,7 +129,7 @@
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #F8FAFC;
+  color: #FFFFFF;
   margin-bottom: 20px;
 }
 
@@ -146,12 +146,12 @@
   align-items: center;
   gap: 6px;
   font-size: 14.5px;
-  color: #94A3B8;
+  color: #B8EDE0;
   transition: all 0.2s ease;
 }
 
 .footer-links-list a:hover {
-  color: #22D3EE;
+  color: #B8F2D0;
   transform: translateX(3px);
 }
 
@@ -171,12 +171,12 @@
   align-items: center;
   gap: 10px;
   font-size: 13.5px;
-  color: #94A3B8;
+  color: #D9F5EB;
   line-height: 1.5;
 }
 
 .cat-icon {
-  color: #22D3EE;
+  color: #8DE5A5;
   flex-shrink: 0;
 }
 
@@ -185,8 +185,8 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  background: rgba(16, 25, 44, 0.6);
-  border: 1px solid rgba(226, 232, 240, 0.1);
+  background: rgba(18, 61, 43, 0.75);
+  border: 1px solid rgba(220, 237, 226, 0.18);
   border-radius: var(--radius-md);
   padding: 18px;
 }
@@ -198,7 +198,7 @@
 }
 
 .contact-icon {
-  color: var(--primary-blue);
+  color: #8DE5A5;
   margin-top: 3px;
   flex-shrink: 0;
 }
@@ -208,13 +208,13 @@
   font-family: var(--font-heading);
   font-size: 13.5px;
   font-weight: 700;
-  color: #F8FAFC;
+  color: #FFFFFF;
 }
 
 .footer-contact-item span {
   display: block;
   font-size: 12px;
-  color: #64748B;
+  color: #B8EDE0;
   margin-top: 2px;
 }
 
@@ -224,7 +224,7 @@
 .footer-bottom {
   margin-top: 60px;
   padding-top: 28px;
-  border-top: 1px solid rgba(226, 232, 240, 0.08);
+  border-top: 1px solid rgba(220, 237, 226, 0.12);
 }
 
 .footer-bottom-container {
@@ -240,7 +240,7 @@
 
 .footer-copyright {
   font-size: 13px;
-  color: #64748B;
+  color: #819B8C;
 }
 
 .footer-bottom-notes {
@@ -248,11 +248,11 @@
   align-items: center;
   gap: 10px;
   font-size: 12px;
-  color: #64748B;
+  color: #819B8C;
 }
 
 .footer-bullet {
-  color: #334155;
+  color: #567565;
 }
 
 /* --------------------------------------------------------------------------

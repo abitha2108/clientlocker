@@ -1,6 +1,6 @@
 /* ==========================================================================
    ClientLocker - Premium Navbar Styling
-   Design System: Space Grotesk + Inter | Electric Blue + Cyan Accent
+   Design System: Mint Green, Fresh Green & Deep Green Identity
    Client: Vaigai Vel & Associates
    ========================================================================== */
 
@@ -10,7 +10,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(248, 250, 252, 0.82);
+  background: rgba(245, 251, 247, 0.88);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border);
@@ -18,9 +18,9 @@
 }
 
 .main-navbar.scrolled {
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 4px 20px -2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.03);
-  border-bottom-color: rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 4px 20px -2px rgba(18, 61, 43, 0.05), 0 1px 3px rgba(18, 61, 43, 0.03);
+  border-bottom-color: var(--border);
   height: 74px;
 }
 
@@ -60,16 +60,16 @@
   display: grid;
   place-items: center;
   color: #ffffff;
-  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  background: linear-gradient(135deg, #39B96B 0%, #269B55 100%);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 14px rgba(57, 185, 107, 0.35);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .navbar-brand:hover .navbar-brand-icon {
   transform: translateY(-1px) scale(1.03);
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.38), 0 0 12px rgba(34, 211, 238, 0.4);
+  box-shadow: 0 6px 18px rgba(57, 185, 107, 0.42), 0 0 12px rgba(168, 232, 95, 0.4);
 }
 
 .navbar-brand-shield-dot {
@@ -79,8 +79,8 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--success);
-  color: #ffffff;
+  background: #A8E85F;
+  color: #123D2B;
   display: grid;
   place-items: center;
   border: 2px solid #ffffff;
@@ -97,13 +97,13 @@
   font-family: var(--font-heading);
   font-size: 21px;
   font-weight: 800;
-  color: var(--heading-color);
+  color: var(--dark-green);
   letter-spacing: -0.5px;
   line-height: 1.15;
 }
 
 .brand-accent {
-  background: linear-gradient(135deg, #2563EB 0%, #22D3EE 100%);
+  background: linear-gradient(135deg, #39B96B 0%, #123D2B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -112,7 +112,7 @@
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
-  color: var(--muted-text);
+  color: var(--secondary-text);
   letter-spacing: 0.5px;
   margin-top: 1px;
 }
@@ -134,7 +134,7 @@
   font-family: var(--font-heading);
   font-size: 15px;
   font-weight: 600;
-  color: var(--body-text);
+  color: var(--text-main);
   text-decoration: none;
   border-radius: var(--radius-sm);
   transition: color 0.2s ease, background 0.2s ease;
@@ -142,12 +142,12 @@
 }
 
 .nav-link:hover {
-  color: var(--primary-blue);
-  background: rgba(37, 99, 235, 0.05);
+  color: var(--dark-green);
+  background: rgba(184, 242, 208, 0.4);
 }
 
 .nav-link.active {
-  color: var(--primary-blue);
+  color: var(--dark-green);
 }
 
 .nav-active-indicator {
@@ -156,9 +156,9 @@
   left: 14px;
   right: 14px;
   height: 2.5px;
-  background: linear-gradient(90deg, #2563EB 0%, #22D3EE 100%);
+  background: linear-gradient(90deg, #39B96B 0%, #8DE5A5 100%);
   border-radius: var(--radius-full);
-  box-shadow: 0 1px 6px rgba(34, 211, 238, 0.4);
+  box-shadow: 0 1px 6px rgba(141, 229, 165, 0.6);
 }
 
 .nav-divider {
@@ -179,19 +179,19 @@
   font-size: 15px;
   font-weight: 600;
   color: #ffffff;
-  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  background: linear-gradient(135deg, #39B96B 0%, #269B55 100%);
   border-radius: var(--radius-full);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 14px rgba(57, 185, 107, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
   cursor: pointer;
 }
 
 .navbar-login-btn:hover {
-  background: linear-gradient(135deg, #1D4ED8 0%, #1e40af 100%);
+  background: linear-gradient(135deg, #269B55 0%, #173B2B 100%);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.38), 0 0 12px rgba(34, 211, 238, 0.3);
+  box-shadow: 0 6px 20px rgba(57, 185, 107, 0.38), 0 0 12px rgba(168, 232, 95, 0.35);
 }
 
 .navbar-login-btn .login-btn-icon {
@@ -212,7 +212,7 @@
   border-radius: var(--radius-sm);
   background: #ffffff;
   border: 1px solid var(--border);
-  color: var(--heading-color);
+  color: var(--dark-green);
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -220,16 +220,16 @@
 }
 
 .navbar-menu-toggle:hover {
-  background: #F1F5F9;
-  border-color: #CBD5E1;
-  color: var(--primary-blue);
+  background: var(--pale-aqua);
+  border-color: var(--fresh-green);
+  color: var(--dark-green);
 }
 
 .navbar-backdrop {
   position: fixed;
   inset: 0;
   top: 80px;
-  background: rgba(11, 18, 32, 0.5);
+  background: rgba(18, 61, 43, 0.45);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   z-index: 998;
@@ -243,7 +243,7 @@
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  box-shadow: 0 24px 48px -12px rgba(11, 18, 32, 0.25);
+  box-shadow: 0 24px 48px -12px rgba(18, 61, 43, 0.22);
   padding: 20px;
   z-index: 999;
   display: flex;
@@ -258,7 +258,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  background: #F8FAFC;
+  background: var(--pale-aqua);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
 }
@@ -268,8 +268,8 @@
   font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--primary-blue);
-  background: rgba(37, 99, 235, 0.1);
+  color: var(--dark-green);
+  background: #B8F2D0;
   padding: 2px 8px;
   border-radius: var(--radius-full);
 }
@@ -278,7 +278,7 @@
   font-family: var(--font-heading);
   font-size: 13px;
   font-weight: 700;
-  color: var(--heading-color);
+  color: var(--dark-green);
 }
 
 .mobile-links-list {
@@ -295,7 +295,7 @@
   font-family: var(--font-heading);
   font-size: 16px;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--text-main);
   border-radius: var(--radius-md);
   text-decoration: none;
   transition: all 0.2s ease;
@@ -303,8 +303,8 @@
 
 .mobile-nav-link:hover,
 .mobile-nav-link.active {
-  background: rgba(37, 99, 235, 0.08);
-  color: var(--primary-blue);
+  background: var(--pale-aqua);
+  color: var(--dark-green);
 }
 
 .mobile-link-arrow {
@@ -314,7 +314,7 @@
 
 .mobile-nav-link:hover .mobile-link-arrow {
   transform: translateX(3px);
-  color: var(--primary-blue);
+  color: var(--primary-button);
 }
 
 .mobile-login-container {
@@ -336,9 +336,9 @@
   font-size: 15px;
   font-weight: 650;
   color: #ffffff;
-  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  background: linear-gradient(135deg, #39B96B 0%, #269B55 100%);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 14px rgba(57, 185, 107, 0.3);
   text-decoration: none;
 }
 

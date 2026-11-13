@@ -1,5 +1,6 @@
 /* ==========================================================================
    ClientLocker - Global App Layout Styles
+   Theme: Mint Green & Fresh Aqua Identity
    ========================================================================== */
 
 .main-layout {
@@ -7,10 +8,45 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  background-color: var(--primary-bg);
   overflow-x: clip;
 }
 
 .main-layout-content {
   flex: 1 0 auto;
   width: 100%;
+}
+
+/* Common UI Helper Classes */
+.text-mint {
+  color: var(--mint-green);
+}
+
+.text-fresh-green {
+  color: var(--fresh-green);
+}
+
+.text-lime {
+  color: var(--lime-green);
+}
+
+.text-dark-green {
+  color: var(--dark-green);
+}
+
+.bg-mint-soft {
+  background-color: var(--pale-aqua);
+}
+
+.badge-mint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--pale-aqua);
+  color: var(--dark-green);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 700;
 }
