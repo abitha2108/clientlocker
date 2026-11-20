@@ -22,6 +22,7 @@ const clientRoutes = require("./routes/clientRoutes");
 const checklistRoutes = require("./routes/checklistRoutes");
 const accessRoutes = require("./routes/accessRoutes");
 const activityRoutes = require("./routes/activityRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 // ======================================
 // VALIDATE ROUTE EXPORTS
@@ -34,7 +35,8 @@ const routes = [
   ["clientRoutes", clientRoutes],
   ["checklistRoutes", checklistRoutes],
   ["accessRoutes", accessRoutes],
-  ["activityRoutes", activityRoutes]
+  ["activityRoutes", activityRoutes],
+  ["aiRoutes", aiRoutes]
 ];
 
 for (const [name, route] of routes) {
@@ -190,6 +192,12 @@ app.use("/api", accessRoutes);
 // ======================================
 
 app.use("/api", activityRoutes);
+
+// ======================================
+// AI CHECKLIST SUGGESTION ROUTES
+// ======================================
+
+app.use("/api", aiRoutes);
 
 // ======================================
 // 404 HANDLER

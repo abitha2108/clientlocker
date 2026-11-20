@@ -12,7 +12,10 @@ import {
   UserMinus,
   ShieldAlert,
   AlertCircle,
-  Clock
+  Clock,
+  Sparkles,
+  CheckCircle2,
+  XCircle
 } from "lucide-react";
 
 import apiRequest from "../../services/api";
@@ -108,6 +111,24 @@ export default function ActivityLog() {
         label: "File download blocked",
         icon: ShieldAlert,
         className: "al-blocked"
+      },
+
+      AI_SUGGESTION_GENERATED: {
+        label: "AI checklist suggestion generated",
+        icon: Sparkles,
+        className: "al-default"
+      },
+
+      AI_SUGGESTION_APPROVED: {
+        label: "AI checklist suggestion approved",
+        icon: CheckCircle2,
+        className: "al-granted"
+      },
+
+      AI_SUGGESTION_REJECTED: {
+        label: "AI checklist suggestion rejected",
+        icon: XCircle,
+        className: "al-removed"
       }
     };
 

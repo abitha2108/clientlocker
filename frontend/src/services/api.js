@@ -287,6 +287,60 @@ export const updateChecklistItem = async (itemId, done) => {
 };
 
 // ==========================================
+// AI CHECKLIST SUGGESTION APIs
+// ==========================================
+
+export const getAiHealth = async () => {
+  return apiRequest("/api/ai/health", {
+    method: "GET"
+  });
+};
+
+// Generate an AI suggestion for a specific file
+export const suggestChecklistForFile = async (fileId) => {
+  if (!fileId) {
+    throw new Error("File ID is missing.");
+  }
+
+  return apiRequest(`/api/files/${fileId}/ai-suggest`, {
+    method: "POST"
+  });
+};
+
+// Get all AI suggestions for a specific file
+export const getFileSuggestions = async (fileId) => {
+  if (!fileId) {
+    throw new Error("File ID is missing.");
+  }
+
+  return apiRequest(`/api/files/${fileId}/ai-suggestions`, {
+    method: "GET"
+  });
+};
+
+// Explicit human approval of an AI suggestion
+export const approveAiSuggestion = async (suggestionId) => {
+  if (!suggestionId) {
+    throw new Error("Suggestion ID is missing.");
+  }
+
+  return apiRequest(`/api/ai-suggestions/${suggestionId}/approve`, {
+    method: "PATCH"
+  });
+};
+
+// Explicit human rejection of an AI suggestion
+export const rejectAiSuggestion = async (suggestionId) => {
+  if (!suggestionId) {
+    throw new Error("Suggestion ID is missing.");
+  }
+
+  return apiRequest(`/api/ai-suggestions/${suggestionId}/reject`, {
+    method: "PATCH"
+  });
+};
+
+// ==========================================
 // EXPORTS
 // ==========================================
 

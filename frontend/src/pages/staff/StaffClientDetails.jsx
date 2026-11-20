@@ -4,7 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import apiRequest, {
-  getClientFiles
+  getClientFiles,
+  getClientChecklist,
+  updateChecklistItem
 } from "../../services/api";
 
 import StaffFileUpload from "./StaffFileUpload";
@@ -18,6 +20,8 @@ export default function StaffClientDetails() {
 
   const [client, setClient] = useState(null);
   const [files, setFiles] = useState([]);
+  const [checklist, setChecklist] = useState([]);
+  const [updatingItemId, setUpdatingItemId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -25,6 +29,7 @@ export default function StaffClientDetails() {
     if (!clientId) {
       setClient(null);
       setFiles([]);
+      setChecklist([]);
       setError("Client ID is missing.");
       setLoading(false);
       return;
@@ -63,9 +68,24 @@ export default function StaffClientDetails() {
       }
 
       setFiles(fileResponse.files);
+
+      // Fetch checklist for this client.
+      try {
+        const checklistResponse = await getClientChecklist(clientId);
+        const items = Array.isArray(checklistResponse?.items)
+          ? checklistResponse.items
+          : Array.isArray(checklistResponse)
+            ? checklistResponse
+            : [];
+        setChecklist(items);
+      } catch (chkErr) {
+        console.warn("Could not load checklist items:", chkErr.message);
+      }
+
     } catch (err) {
       setClient(null);
       setFiles([]);
+      setChecklist([]);
       setError(err.message || "Unable to load client information.");
     } finally {
       setLoading(false);
@@ -75,6 +95,34 @@ export default function StaffClientDetails() {
   useEffect(() => {
     fetchClientData();
   }, [fetchClientData]);
+
+  // Manual checklist toggle
+  const handleToggleChecklist = async (item) => {
+    const itemId = item._id || item.id;
+    if (!itemId || updatingItemId) return;
+
+    try {
+      setUpdatingItemId(itemId);
+      const newStatus = !item.done;
+      await updateChecklistItem(itemId, newStatus);
+
+      setChecklist((prev) =>
+        prev.map((i) =>
+          String(i._id || i.id) === String(itemId)
+            ? { ...i, done: newStatus }
+            : i
+        )
+      );
+    } catch (err) {
+      setError(err.message || "Failed to update checklist item status.");
+    } finally {
+      setUpdatingItemId(null);
+    }
+  };
+
+  const completedCount = checklist.filter((i) => i.done).length;
+  const totalChecklist = checklist.length;
+  const progressPercent = totalChecklist > 0 ? Math.round((completedCount / totalChecklist) * 100) : 0;
 
   if (loading) {
     return (
@@ -135,7 +183,7 @@ export default function StaffClientDetails() {
         <div>
           <span>CLIENT WORKSPACE</span>
           <h1>{client?.name}</h1>
-          <p>Manage and securely access client documents.</p>
+          <p>Manage and securely access client documents and AI-assisted checklists.</p>
         </div>
       </header>
 
@@ -152,6 +200,11 @@ export default function StaffClientDetails() {
         </div>
 
         <div>
+          <span>Checklist Progress</span>
+          <strong>{completedCount} / {totalChecklist} ({progressPercent}%)</strong>
+        </div>
+
+        <div>
           <span>Client status</span>
           <strong className="staff-assigned-label">
             Assigned
@@ -165,6 +218,64 @@ export default function StaffClientDetails() {
             clientId={clientId}
             onUploadSuccess={fetchClientData}
           />
+
+          {/* Client Checklist Section */}
+          <div className="staff-checklist-card">
+            <div className="staff-checklist-card-header">
+              <div>
+                <h3>Document Checklist</h3>
+                <p>AI suggestions link documents to these items</p>
+              </div>
+              <span className="staff-checklist-badge">
+                {progressPercent}% Done
+              </span>
+            </div>
+
+            <div className="staff-progress-bar-track">
+              <div
+                className="staff-progress-bar-fill"
+                style={{ width: `${progressPercent}%` }}
+              ></div>
+            </div>
+
+            <div className="staff-checklist-items-list">
+              {checklist.length === 0 ? (
+                <p className="staff-checklist-empty">No checklist items defined.</p>
+              ) : (
+                checklist.map((item) => {
+                  const itemId = item._id || item.id;
+                  const isUpdating = updatingItemId === itemId;
+
+                  return (
+                    <div
+                      key={itemId}
+                      className={`staff-checklist-item-row ${item.done ? "is-done" : ""}`}
+                    >
+                      <label className="staff-checklist-checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={Boolean(item.done)}
+                          disabled={isUpdating}
+                          onChange={() => handleToggleChecklist(item)}
+                        />
+                        <span className="staff-checklist-item-name">
+                          {item.name}
+                        </span>
+                      </label>
+
+                      <span
+                        className={`staff-item-status-pill ${
+                          item.done ? "pill-done" : "pill-pending"
+                        }`}
+                      >
+                        {item.done ? "Completed" : "Open"}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="staff-details-files-column">

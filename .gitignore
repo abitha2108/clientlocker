@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Production build outputs
+dist/
+frontend/dist/
+build/
+
+# Local environment files (DO NOT COMMIT SECRETS)
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env
+!*.env.example
+
+# Logs and temporary files
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+
+# Test artifacts and screenshots
+test_screenshots/
+
+# IDE, agent & tool configs
+.vscode/
+.idea/
+.agents/
+.aider-desk/
+skills-lock.json
+
+# OS files
+.DS_Store
+Thumbs.db

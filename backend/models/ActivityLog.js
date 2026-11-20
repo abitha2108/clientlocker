@@ -31,7 +31,10 @@ const activityLogSchema = new mongoose.Schema(
         "ACCESS_GRANTED",
         "ACCESS_REMOVED",
         "ACCESS_BLOCKED",
-        "FILE_DOWNLOAD_BLOCKED"
+        "FILE_DOWNLOAD_BLOCKED",
+        "AI_SUGGESTION_GENERATED",
+        "AI_SUGGESTION_APPROVED",
+        "AI_SUGGESTION_REJECTED"
       ]
     },
 

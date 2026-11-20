@@ -1,0 +1,341 @@
+/* ==========================================================================
+   CLIENTLOCKER CLIENT MAGIC LOGIN STYLES
+   Visual reference: https://clientlocker-omega.vercel.app/
+   Passwordless Client Portal Sign-In
+   ========================================================================== */
+
+.magic-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #F5FBF7 0%, #F5FBF7 100%);
+  font-family: var(--font-sans);
+  color: var(--text-main);
+  position: relative;
+}
+
+.magic-login-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 42px 36px;
+  background: #ffffff;
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(18, 61, 43, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+.magic-login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.magic-login-logo svg {
+  color: #ffffff;
+  background: var(--accent-primary);
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border-radius: 11px;
+  box-shadow: 0 4px 12px rgba(57, 185, 107, 0.25);
+}
+
+.magic-login-logo h1 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.magic-login-heading {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.magic-login-heading h2 {
+  font-family: var(--font-heading);
+  color: var(--text-main);
+  font-size: 23px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.magic-login-heading p {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.magic-login-card label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.magic-input-wrapper,
+.magic-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.magic-input-wrapper svg,
+.magic-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--secondary-text);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.magic-input-wrapper input,
+.magic-input-box input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px 0 44px;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  font-size: 14.5px;
+  color: var(--text-main);
+  background: #ffffff;
+  outline: none;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.magic-input-wrapper input:focus,
+.magic-input-box input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(57, 185, 107, 0.16);
+}
+
+.magic-submit-button,
+.magic-login-card button {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--accent-primary);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 14.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(57, 185, 107, 0.28);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.magic-submit-button:hover:not(:disabled),
+.magic-login-card button:hover:not(:disabled) {
+  background: var(--accent-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(57, 185, 107, 0.35);
+}
+
+.magic-submit-button:disabled,
+.magic-login-card button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.magic-error {
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--accent-rose-soft);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--accent-rose);
+  font-size: 13px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.magic-success {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.magic-success svg {
+  color: var(--accent-emerald);
+  margin-bottom: 14px;
+}
+
+.magic-success h2 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+.magic-success p {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.magic-back-login {
+  display: block;
+  text-align: center;
+  margin-top: 22px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.magic-back-login:hover {
+  text-decoration: underline;
+}
+
+.magic-resend-btn {
+  background: transparent !important;
+  color: var(--accent-primary) !important;
+  border: 1px solid var(--border-hover) !important;
+  box-shadow: none !important;
+  margin-bottom: 14px;
+}
+
+.magic-resend-btn:hover {
+  background: var(--accent-blue-tint) !important;
+}
+
+/* ==========================================================================
+   MAGIC LINK VERIFICATION SCREEN
+   ========================================================================== */
+
+.magic-result-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #F5FBF7 0%, #F5FBF7 100%);
+  font-family: var(--font-sans);
+  color: var(--text-main);
+}
+
+.magic-result-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 42px 36px;
+  background: #ffffff;
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(18, 61, 43, 0.08);
+  text-align: center;
+}
+
+.magic-result-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 24px;
+}
+
+.magic-result-logo svg {
+  color: #ffffff;
+  background: var(--accent-primary);
+  width: 36px;
+  height: 36px;
+  padding: 7px;
+  border-radius: 10px;
+}
+
+.magic-result-spinner {
+  width: 44px;
+  height: 44px;
+  margin: 20px auto 24px;
+  border: 3.5px solid rgba(57, 185, 107, 0.15);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: cl-spin 0.8s linear infinite;
+}
+
+.magic-result-content h2 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.magic-result-content p {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.magic-result-error-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent-rose-soft);
+  color: var(--accent-rose);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+}
+
+.magic-result-error-message {
+  color: var(--accent-rose) !important;
+  font-weight: 600;
+  margin-bottom: 16px !important;
+}
+
+.magic-result-login-button {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--accent-primary);
+  color: #ffffff;
+  font-size: 14.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 24px 0 16px;
+  box-shadow: 0 4px 16px rgba(57, 185, 107, 0.28);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.magic-result-login-button:hover {
+  background: var(--accent-primary-hover);
+  transform: translateY(-1px);
+}
+
+.magic-result-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.magic-result-footer {
+  margin-top: 24px;
+  color: var(--text-dim);
+  font-size: 12px;
+}

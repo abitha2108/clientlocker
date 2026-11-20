@@ -1,6 +1,12 @@
 
 import { useState } from "react";
-import { openClientFile } from "../services/api";
+import {
+  openClientFile,
+  suggestChecklistForFile,
+  approveAiSuggestion,
+  rejectAiSuggestion,
+  getFileSuggestions
+} from "../services/api";
 import "./FileList.css";
 
 export default function FileList({
@@ -9,7 +15,16 @@ export default function FileList({
   onRefresh
 }) {
   const [openingId, setOpeningId] = useState(null);
+  const [suggestingId, setSuggestingId] = useState(null);
   const [error, setError] = useState("");
+
+  // AI Suggestion Modal State
+  const [activeModalFile, setActiveModalFile] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState("");
+  const [aiSuggestion, setAiSuggestion] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionSuccess, setActionSuccess] = useState("");
 
   const formatDate = (date) => {
     if (!date) return "Date unavailable";
@@ -64,8 +79,6 @@ export default function FileList({
       setOpeningId(fileId);
       setError("");
 
-      // Open the tab immediately during the click event
-      // to avoid browser popup blocking.
       newTab = window.open("about:blank", "_blank");
 
       if (!newTab) {
@@ -75,12 +88,10 @@ export default function FileList({
       }
 
       newTab.opener = null;
-
       newTab.document.title = "Opening ClientLocker document...";
       newTab.document.body.innerHTML =
         "<p style='font-family:Arial,sans-serif;padding:24px'>Opening secure document...</p>";
 
-      // Fetch through the authenticated backend API.
       const result = await openClientFile(fileId);
 
       const blob =
@@ -94,7 +105,6 @@ export default function FileList({
         throw new Error("The document could not be downloaded.");
       }
 
-      // Allow only PDF, JPG and PNG.
       const allowedTypes = [
         "application/pdf",
         "image/jpeg",
@@ -109,14 +119,8 @@ export default function FileList({
         throw new Error("Unsupported document format.");
       }
 
-      // Create a temporary browser URL from the authenticated Blob.
       objectUrl = window.URL.createObjectURL(blob);
-
-      // Navigate the already-opened tab to the document.
       newTab.location.replace(objectUrl);
-
-      // The browser owns the Blob URL while displaying it.
-      // Do not revoke it immediately, or the document may stop loading.
       objectUrl = null;
 
     } catch (err) {
@@ -137,6 +141,139 @@ export default function FileList({
 
       setOpeningId(null);
     }
+  };
+
+  // ==========================================
+  // AI SUGGEST ACTION
+  // ==========================================
+
+  const handleAiSuggest = async (file) => {
+    const fileId = file.id || file._id;
+
+    if (!fileId) {
+      setError("Unable to request suggestion. File ID is missing.");
+      return;
+    }
+
+    setActiveModalFile(file);
+    setAiLoading(true);
+    setAiError("");
+    setAiSuggestion(null);
+    setActionSuccess("");
+    setSuggestingId(fileId);
+
+    try {
+      // 1. First check if an existing suggestion exists for this file
+      let existingSuggestion = null;
+      try {
+        const history = await getFileSuggestions(fileId);
+        if (history?.suggestions && history.suggestions.length > 0) {
+          existingSuggestion = history.suggestions[0];
+        }
+      } catch {
+        // Continue to fresh generation if history query is skipped
+      }
+
+      // If there is an existing pending suggestion, display it directly
+      if (existingSuggestion && existingSuggestion.status === "pending") {
+        setAiSuggestion(existingSuggestion);
+        setAiLoading(false);
+        setSuggestingId(null);
+        return;
+      }
+
+      // 2. Trigger fresh suggestion generation from backend
+      const response = await suggestChecklistForFile(fileId);
+
+      if (response?.suggestion) {
+        setAiSuggestion(response.suggestion);
+      } else {
+        setAiError(
+          response?.message ||
+          "No matching open checklist items were identified for this document."
+        );
+      }
+    } catch (err) {
+      console.error("AI suggest error:", err);
+      setAiError(
+        err.message ||
+        "AI microservice is unavailable. You may continue to process checklists manually."
+      );
+    } finally {
+      setAiLoading(false);
+      setSuggestingId(null);
+    }
+  };
+
+  // ==========================================
+  // APPROVE SUGGESTION
+  // ==========================================
+
+  const handleApprove = async () => {
+    if (!aiSuggestion?.id) return;
+
+    try {
+      setActionLoading(true);
+      setError("");
+
+      const response = await approveAiSuggestion(aiSuggestion.id);
+
+      setAiSuggestion((prev) => ({
+        ...prev,
+        status: "approved",
+        reviewed_by: response?.suggestion?.reviewed_by || "Current User",
+        reviewed_at: response?.suggestion?.reviewed_at || new Date().toISOString()
+      }));
+
+      setActionSuccess("Suggestion approved! Checklist item marked as completed.");
+
+      if (typeof onRefresh === "function") {
+        onRefresh();
+      }
+    } catch (err) {
+      setAiError(err.message || "Failed to approve suggestion.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // ==========================================
+  // REJECT SUGGESTION
+  // ==========================================
+
+  const handleReject = async () => {
+    if (!aiSuggestion?.id) return;
+
+    try {
+      setActionLoading(true);
+      setError("");
+
+      const response = await rejectAiSuggestion(aiSuggestion.id);
+
+      setAiSuggestion((prev) => ({
+        ...prev,
+        status: "rejected",
+        reviewed_by: response?.suggestion?.reviewed_by || "Current User",
+        reviewed_at: response?.suggestion?.reviewed_at || new Date().toISOString()
+      }));
+
+      setActionSuccess("Suggestion rejected. Checklist remains unchanged.");
+
+      if (typeof onRefresh === "function") {
+        onRefresh();
+      }
+    } catch (err) {
+      setAiError(err.message || "Failed to reject suggestion.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const closeModal = () => {
+    setActiveModalFile(null);
+    setAiSuggestion(null);
+    setAiError("");
+    setActionSuccess("");
   };
 
   // ==========================================
@@ -194,48 +331,215 @@ export default function FileList({
             <tbody>
               {files.map((file) => {
                 const fileId = file.id || file._id;
+                const isPdf = file.file_type === "PDF";
 
                 return (
                   <tr key={fileId}>
                     <td>
                       <div className="staff-file-name">
-                        <span>
-                          {file.file_type === "PDF" ? "📕" : "🖼️"}
-                        </span>
-
-                        <strong>
-                          {file.name || "Unnamed document"}
-                        </strong>
+                        <span>{isPdf ? "📕" : "🖼️"}</span>
+                        <strong>{file.name || "Unnamed document"}</strong>
                       </div>
                     </td>
 
                     <td>{file.file_type || "Unknown"}</td>
 
-                    <td>
-                      {file.uploaded_by?.name || "Unknown"}
-                    </td>
+                    <td>{file.uploaded_by?.name || "Unknown"}</td>
 
                     <td>{formatDate(file.created_at)}</td>
 
                     <td>{formatSize(file.file_size)}</td>
 
                     <td>
-                      <button
-                        type="button"
-                        className="staff-file-open-button"
-                        onClick={() => handleOpen(file)}
-                        disabled={!fileId || openingId === fileId}
-                      >
-                        {openingId === fileId
-                          ? "Opening..."
-                          : "Open"}
-                      </button>
+                      <div className="staff-file-actions">
+                        <button
+                          type="button"
+                          className="staff-file-open-button"
+                          onClick={() => handleOpen(file)}
+                          disabled={!fileId || openingId === fileId}
+                        >
+                          {openingId === fileId ? "Opening..." : "Open"}
+                        </button>
+
+                        {isPdf && (
+                          <button
+                            type="button"
+                            className="staff-ai-suggest-btn"
+                            onClick={() => handleAiSuggest(file)}
+                            disabled={suggestingId === fileId}
+                            title="Analyze document with Standalone-AI and suggest matching checklist item"
+                          >
+                            {suggestingId === fileId ? (
+                              <>
+                                <span className="staff-ai-spinner-inline"></span>
+                                <span>Analyzing...</span>
+                              </>
+                            ) : (
+                              <>
+                                <span>✨</span>
+                                <span>AI Suggest</span>
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ==========================================
+          AI SUGGESTION REVIEW MODAL
+      ========================================== */}
+      {activeModalFile && (
+        <div className="staff-ai-modal-backdrop" onClick={closeModal}>
+          <div
+            className="staff-ai-modal-content"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ai-modal-title"
+          >
+            <header className="staff-ai-modal-header">
+              <div className="staff-ai-modal-title-group">
+                <span className="staff-ai-sparkle-icon">✨</span>
+                <div>
+                  <h3 id="ai-modal-title">AI Checklist Suggestion</h3>
+                  <p>{activeModalFile.name}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="staff-ai-close-btn"
+                onClick={closeModal}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </header>
+
+            <div className="staff-ai-modal-body">
+              {/* Loading State */}
+              {aiLoading && (
+                <div className="staff-ai-loading-box">
+                  <div className="staff-ai-big-spinner"></div>
+                  <h4>Analyzing Document</h4>
+                  <p>
+                    Connecting to Standalone-AI microservice and extracting
+                    document contents...
+                  </p>
+                </div>
+              )}
+
+              {/* Error / Unavailable State */}
+              {!aiLoading && aiError && (
+                <div className="staff-ai-error-box" role="alert">
+                  <div className="staff-ai-error-icon">⚠️</div>
+                  <div className="staff-ai-error-details">
+                    <h4>AI Suggestion Unavailable</h4>
+                    <p>{aiError}</p>
+                    <span className="staff-ai-error-hint">
+                      Manual checklist processing remains available. You can
+                      update client checklist items directly without interruption.
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Action Success Alert */}
+              {actionSuccess && (
+                <div className="staff-ai-success-box" role="status">
+                  <span>✓</span>
+                  <p>{actionSuccess}</p>
+                </div>
+              )}
+
+              {/* Suggestion Display */}
+              {!aiLoading && aiSuggestion && (
+                <div className="staff-ai-suggestion-card">
+                  <div className="staff-ai-card-top">
+                    <div>
+                      <span className="staff-ai-label">SUGGESTED CHECKLIST ITEM</span>
+                      <h4 className="staff-ai-item-name">
+                        {aiSuggestion.checklist_item_name}
+                      </h4>
+                    </div>
+
+                    <div className="staff-ai-status-badges">
+                      <span
+                        className={`staff-ai-status-pill status-${aiSuggestion.status}`}
+                      >
+                        {aiSuggestion.status === "pending" && "⏳ Pending Human Approval"}
+                        {aiSuggestion.status === "approved" && "✓ Approved"}
+                        {aiSuggestion.status === "rejected" && "✕ Rejected"}
+                      </span>
+
+                      <span className="staff-ai-score-pill">
+                        {aiSuggestion.score}% Confidence
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="staff-ai-reason-section">
+                    <span className="staff-ai-reason-label">AI Reasoning & Match Evidence</span>
+                    <p className="staff-ai-reason-text">{aiSuggestion.reason}</p>
+                  </div>
+
+                  {aiSuggestion.reviewed_by && (
+                    <div className="staff-ai-review-meta">
+                      Reviewed by <strong>{aiSuggestion.reviewed_by}</strong> on{" "}
+                      {formatDate(aiSuggestion.reviewed_at)}
+                    </div>
+                  )}
+
+                  {/* Human Approval Action Buttons */}
+                  {aiSuggestion.status === "pending" && (
+                    <div className="staff-ai-action-buttons">
+                      <button
+                        type="button"
+                        className="staff-ai-approve-btn"
+                        onClick={handleApprove}
+                        disabled={actionLoading}
+                      >
+                        {actionLoading ? "Processing..." : "✓ Approve Suggestion"}
+                      </button>
+
+                      <button
+                        type="button"
+                        className="staff-ai-reject-btn"
+                        onClick={handleReject}
+                        disabled={actionLoading}
+                      >
+                        {actionLoading ? "Processing..." : "✕ Reject Suggestion"}
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="staff-ai-guardrail-notice">
+                    <small>
+                      🛡️ <strong>Human-in-the-loop:</strong> AI suggestions never
+                      automatically complete checklist items. Explicit approval is
+                      required.
+                    </small>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <footer className="staff-ai-modal-footer">
+              <button
+                type="button"
+                className="staff-ai-dismiss-btn"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+            </footer>
+          </div>
         </div>
       )}
     </section>

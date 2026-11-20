@@ -20,6 +20,8 @@ import Login from "./pages/auth/Login";
 // Partner pages
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerClients from "./pages/partner/PartnerClients";
+import ActivityLog from "./pages/partner/ActivityLog";
+import PartnerAssignClient from "./pages/partner/PartnerAssignClient";
 
 // Staff pages
 import StaffDashboard from "./pages/staff/StaffDashboard";
@@ -28,6 +30,10 @@ import StaffFileUpload from "./pages/staff/StaffFileUpload";
 
 // Client pages
 import ClientDashboard from "./pages/client/ClientDashboard";
+
+// Auditor pages
+import AuditorDashboard from "./pages/auditor/AuditorDashboard";
+import AuditorClientDetails from "./pages/auditor/AuditorClientDetails";
 
 // ==========================================
 // AUTHENTICATION LOADING
@@ -82,7 +88,8 @@ function DashboardRedirect() {
   const roleRoutes = {
     partner: "/partner/dashboard",
     staff: "/staff/dashboard",
-    client: "/client/dashboard"
+    client: "/client/dashboard",
+    auditor: "/auditor/dashboard"
   };
 
   return (
@@ -156,6 +163,33 @@ function AppRoutes() {
         }
       />
 
+      <Route
+        path="/partner/activity"
+        element={
+          <RoleProtectedRoute allowedRoles={["partner"]}>
+            <ActivityLog />
+          </RoleProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/partner/assign"
+        element={
+          <RoleProtectedRoute allowedRoles={["partner"]}>
+            <PartnerAssignClient />
+          </RoleProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/partner/assignments"
+        element={
+          <RoleProtectedRoute allowedRoles={["partner"]}>
+            <PartnerAssignClient />
+          </RoleProtectedRoute>
+        }
+      />
+
       {/* ======================================
           STAFF ROUTES - M2
       ====================================== */}
@@ -205,6 +239,28 @@ function AppRoutes() {
         element={
           <RoleProtectedRoute allowedRoles={["client"]}>
             <ClientDashboard />
+          </RoleProtectedRoute>
+        }
+      />
+
+      {/* ======================================
+          AUDITOR ROUTES
+      ====================================== */}
+
+      <Route
+        path="/auditor/dashboard"
+        element={
+          <RoleProtectedRoute allowedRoles={["auditor"]}>
+            <AuditorDashboard />
+          </RoleProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/auditor/clients/:clientId"
+        element={
+          <RoleProtectedRoute allowedRoles={["auditor"]}>
+            <AuditorClientDetails />
           </RoleProtectedRoute>
         }
       />
