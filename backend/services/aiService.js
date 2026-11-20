@@ -5,9 +5,10 @@ const axios = require("axios");
  * Helper to get sanitized configuration from environment variables.
  */
 const getAiConfig = () => {
-  const rawUrl = process.env.AI_SERVICE_URL || "https://standalone-ai-clientlocker.onrender.com";
+  const rawUrl = process.env.AI_SERVICE_URL || process.env.STANDALONE_AI_URL || "https://standalone-ai-clientlocker.onrender.com";
   const baseURL = rawUrl.replace(/\/+$/, "");
-  const apiKey = (process.env.AI_SERVICE_API_KEY || "").trim();
+  const rawApiKey = (process.env.AI_SERVICE_API_KEY || process.env.STANDALONE_AI_API_KEY || process.env.AI_API_KEY || "").trim();
+  const apiKey = rawApiKey.replace(/^["']|["']$/g, "").trim();
   const timeoutMs = parseInt(process.env.AI_SERVICE_TIMEOUT_MS, 10) || 60000;
 
   return {
@@ -94,9 +95,10 @@ const suggestChecklist = async ({
     Accept: "application/json"
   };
 
-  // Securely attach API key if provided
+  // Securely attach API key if provided (supports both X-API-Key and Bearer)
   if (apiKey) {
     headers["X-API-Key"] = apiKey;
+    headers["Authorization"] = `Bearer ${apiKey}`;
   }
 
   try {

@@ -54,7 +54,8 @@ const protect = async (req, res, next) => {
     if (
       error.name === "TokenExpiredError" ||
       error.name === "JsonWebTokenError" ||
-      error.name === "NotBeforeError"
+      error.name === "NotBeforeError" ||
+      error.name === "SyntaxError"
     ) {
       return res.status(401).json({
         success: false,
