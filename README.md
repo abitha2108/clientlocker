@@ -24,13 +24,16 @@
 
 [https://drive.google.com/file/d/1KEHHSRG7wIo6-Or9x9akIGTmm3WYTKvi/view?usp=sharing]
 
+**AI Future video**
+[https://drive.google.com/file/d/1KMTM9E4BvcueFyMmH3Dv3oAcKQFgCGWC/view?usp=sharing]
+
 ## 📌 Project Overview
 
 ClientLocker is a private client document management system developed for **Vaigai Vel & Associates**, an accounting firm in Madurai, Tamil Nadu.
 
 The platform helps accounting firms securely upload, organize, manage, and access confidential client documents through a centralized portal.
 
-It provides role-based access control to ensure users can access only the documents and client information they are authorized to view.
+It provides role-based access control to ensure users can access only the documents and client information they are authorized to view. It also includes an AI-assisted document checklist suggestion workflow that helps staff identify which checklist requirement an uploaded document may satisfy.
 
 ## 🎯 Project Objectives
 
@@ -42,6 +45,8 @@ It provides role-based access control to ensure users can access only the docume
 - Maintain activity records.
 - Provide controlled auditor access.
 - Improve document management efficiency.
+- Assist staff with AI-powered document classification and checklist matching.
+- Keep important document decisions under human review and approval.
 
 ## 👥 User Roles
 
@@ -68,8 +73,120 @@ It provides role-based access control to ensure users can access only the docume
 - Secure magic-link client access.
 - Temporary document download links.
 - AI-powered document checklist suggestions.
+- AI-assisted document classification and checklist matching.
+- Confidence score and match explanation for AI suggestions.
+- Pending suggestion review workflow for authorized staff.
+- Manual approval and rejection of AI suggestions.
+- Checklist update after an authorized approval.
+- AI suggestion and review activity logging.
+- Duplicate-review protection.
 
-*Feature availability depends on milestone implementation. M3 features are separate from the M2 submission.*
+**Feature availability depends on milestone implementation. M3 features are separate from the M2 submission.**
+
+---
+
+# 🤖 AI-Powered Document Checklist Assistance
+
+ClientLocker integrates with a separately deployed **Standalone-AI microservice** built with Python and FastAPI. The AI service is kept independent from the ClientLocker application and communicates with the ClientLocker backend through authenticated server-to-server API requests.
+
+### AI Workflow
+
+1. An authorized staff member uploads a client document.
+2. Staff selects **AI Suggest** for the uploaded document.
+3. The ClientLocker backend securely processes the document and extracts supported text.
+4. The backend sends the required document information to the Standalone-AI microservice.
+5. The AI analyzes the document and compares it with the client's open checklist requirements.
+6. The AI returns a suggested checklist item, confidence score, and matching explanation.
+7. ClientLocker stores the suggestion with a **Pending** status.
+8. Authorized staff reviews the suggestion and chooses to approve or reject it.
+9. The checklist is updated only after an authorized human approval.
+10. The generation and review actions are recorded in the activity log.
+
+### AI Capabilities
+
+- PDF text extraction for supported text-based PDFs.
+- Document keyword and type matching.
+- Month and document requirement matching.
+- Checklist item suggestion.
+- Confidence score and match-reason display.
+- Pending, approved, and rejected suggestion states.
+- Manual staff approval and rejection.
+- Duplicate-review protection.
+- Activity logging for AI suggestion generation and decisions.
+- Manual checklist workflow remains available if AI processing fails.
+
+### Human-in-the-Loop Safeguard
+
+**AI suggestions do not automatically complete checklist items.**
+
+Every suggestion is stored as pending and requires an authorized staff member to review it. The checklist is updated only after approval. Rejection leaves the checklist unchanged.
+
+This keeps accounting document decisions under human control.
+
+### AI Service Architecture
+
+```text
+ClientLocker React Frontend
+          |
+          v
+ClientLocker Node.js / Express Backend
+          |
+          | Authenticated server-to-server request
+          v
+Standalone-AI FastAPI Microservice
+          |
+          v
+Document Classification & Checklist Matching
+          |
+          v
+ClientLocker Backend
+          |
+          v
+MongoDB — Pending AI Suggestion
+          |
+          v
+Authorized Staff Review
+          |
+          +---- Approve ----> Update Checklist
+          |
+          +---- Reject -----> Keep Checklist Unchanged
+          |
+          v
+Activity Log
+```
+
+### AI Integration Verification
+
+The live integration verification report dated **20 November 2026** recorded the following workflow results:
+
+| Verification | Observed result |
+|---|---|
+| Authenticated AI suggestion request | HTTP 201 Created |
+| Sample document | `March_Bank_Statement.pdf` |
+| Suggested checklist item | March bank statement |
+| Match score | 100 |
+| Initial suggestion status | `pending` |
+| Checklist before approval | `done: false` |
+| Manual approval | HTTP 200 OK |
+| Checklist after approval | `done: true` |
+| Duplicate approval attempt | HTTP 400 — already reviewed |
+| Audit events | `AI_SUGGESTION_GENERATED` and `AI_SUGGESTION_APPROVED` |
+
+These results describe the specific live workflow recorded in the verification report. They are not a claim that every possible document type or failure scenario has been tested.
+
+### AI Security and Configuration
+
+The Standalone-AI service remains a separate microservice. The AI API key is stored only in the ClientLocker backend environment and must never be exposed in frontend code, browser storage, public API responses, screenshots, or Git commits.
+
+Backend environment variables:
+
+```env
+AI_SERVICE_URL=https://standalone-ai-clientlocker.onrender.com
+AI_SERVICE_API_KEY=your_matching_standalone_ai_secret
+AI_SERVICE_TIMEOUT_MS=60000
+```
+
+Use the same secret configured in the Standalone-AI service. Do not commit real secrets or `.env` files to GitHub.
 
 ---
 
@@ -169,6 +286,7 @@ The following accounts are created by the database seed script and can be used f
 ```text
 ClientLocker@2026
 ```
+
 ### Partner Accounts
 
 | Name | Email | Password |
@@ -208,10 +326,9 @@ ClientLocker@2026
 |---|---|---|
 | Senthil Nathan | senthil.auditor@clientlocker.test | ClientLocker@2026 |
 
-
 All seeded Partner, Staff, Client, and Auditor accounts use this same demonstration password.
 
-*These are made-up test accounts created for the internship project. They are not real customer accounts.*
+**These are made-up test accounts created for the internship project. They are not real customer accounts.**
 
 ## 7. M2 Screen Recording
 
@@ -227,7 +344,7 @@ The recording should demonstrate:
 - Uploaded document appearing in the file list.
 - Opening the uploaded document.
 
-*Set Google Drive sharing to "Anyone with the link" so the reviewer can access the recording.*
+**Set Google Drive sharing to "Anyone with the link" so the reviewer can access the recording.**
 
 ---
 
@@ -253,6 +370,14 @@ The recording should demonstrate:
 
 - MongoDB
 
+### AI Integration
+
+- Python
+- FastAPI
+- Standalone-AI microservice
+- Authenticated backend-to-service API communication
+- PDF text extraction and checklist matching
+
 ### Tools and Deployment
 
 - GitHub – Version Control
@@ -260,6 +385,7 @@ The recording should demonstrate:
 - Render – Backend Hosting
 - Visual Studio Code – Development Environment
 - Antigravity – AI-Assisted Development
+- Cloudinary – Private document storage and delivery
 
 ## 📂 Project Structure
 
@@ -272,6 +398,7 @@ clientlocker/
 │   ├── models/
 │   ├── routes/
 │   ├── controllers/
+│   ├── services/
 │   ├── scripts/
 │   └── server.js
 │
@@ -294,7 +421,6 @@ clientlocker/
 │   │   ├── App.css
 │   │   ├── index.css
 │   │   └── main.jsx
-│   │
 │   ├── package.json
 │   ├── package-lock.json
 │   └── vite.config.js
@@ -302,6 +428,8 @@ clientlocker/
 ├── docs/
 └── README.md
 ```
+
+**Note:** The Standalone-AI microservice is maintained separately and is not included inside this repository.
 
 ## ⚙️ Installation and Setup
 
@@ -368,7 +496,17 @@ FRONTEND_URL=http://localhost:5173
 
 Add any additional Cloudinary, email, or Google credentials required by your backend configuration.
 
-Never commit `.env` files or secret credentials to GitHub.
+For AI integration, configure the following variables in the **backend environment only**:
+
+```env
+AI_SERVICE_URL=https://standalone-ai-clientlocker.onrender.com
+AI_SERVICE_API_KEY=your_matching_standalone_ai_secret
+AI_SERVICE_TIMEOUT_MS=60000
+```
+
+The AI API key must match the secret configured in the separate Standalone-AI service.
+
+Never expose backend secrets in frontend environment variables. Never commit `.env` files or secret credentials to GitHub.
 
 ### 7. Start Backend Development Server
 
@@ -403,6 +541,11 @@ Production files will be generated inside the `dist` directory.
 - Record important user activities.
 - Never commit credentials or `.env` files to GitHub.
 - Use made-up test data for demonstrations.
+- Keep the Standalone-AI API key on the backend only.
+- Validate AI suggestions against the correct client's checklist.
+- Require authorized human approval before updating checklist status.
+- Prevent duplicate or concurrent review of the same suggestion.
+- Keep AI service errors from disabling the manual document workflow.
 
 ## 🎨 UI and Design
 
@@ -428,6 +571,8 @@ The frontend application is deployed using Vercel.
 
 The backend application is hosted using Render.
 
+The Standalone-AI microservice is deployed separately and accessed by the ClientLocker backend through authenticated API requests.
+
 ## 👨‍💻 Project Information
 
 | Detail | Information |
@@ -442,6 +587,7 @@ The backend application is hosted using Render.
 | Frontend Hosting | Vercel |
 | Backend Hosting | Render |
 | Database | MongoDB |
+| AI Service | Separate Standalone-AI FastAPI Microservice |
 
 ## 📈 Future Enhancements – M3 and Beyond
 
@@ -455,6 +601,38 @@ The backend application is hosted using Render.
 - Advanced audit reports.
 - Enhanced activity monitoring.
 - Additional security improvements.
+
+---
+
+## 🧪 Testing and Verification Summary
+
+The following results are taken from the available project verification reports.
+
+### Live AI Workflow Verification
+
+| Test | Reported result |
+|---|---|
+| Authenticated AI suggestion request | HTTP 201 Created |
+| Document classification | 100 match score |
+| Pending status before review | Verified |
+| Checklist unchanged before approval | Verified |
+| Manual approval | HTTP 200 OK |
+| Checklist updated after approval | Verified |
+| Duplicate approval prevention | HTTP 400 |
+| AI generation and approval audit events | Recorded |
+
+### Reported Production Verification
+
+The production smoke-test report dated 20 November 2026 recorded:
+
+- 22 scenarios.
+- 21 passed.
+- 0 failed.
+- 1 blocked/degraded notice related to Google OAuth configuration.
+
+The later AI workflow verification report confirmed successful authenticated AI suggestion generation, manual approval, checklist persistence, duplicate-review protection, and audit logging.
+
+**Testing figures refer to the specific reports and test environments in which they were executed. They should not be interpreted as a single combined test run.**
 
 ## 📝 M2 Submission Notes
 
@@ -470,7 +648,7 @@ The M2 submission includes:
 - Client file listing and opening functionality.
 - A 60-second screen recording demonstrating the complete workflow.
 
-Features planned for later milestones are identified separately and should not be considered completed unless implemented and tested.
+AI-powered document checklist suggestions and other later-milestone functionality are documented separately above. Features planned for later milestones should not be considered part of the M2 submission unless implemented and tested.
 
 ---
 
