@@ -48,7 +48,7 @@ All accounts below are made-up demonstration accounts created through the projec
 ## The AI feature
 
 - **What it does:** ClientLocker uses a separate Python FastAPI microservice called Standalone-AI to analyze supported document text and suggest matching client checklist requirements. It returns a suggested checklist item, confidence score, and explanation. Authorized staff must approve a suggestion before the checklist is updated.
-- **Which free model it uses:** The exact model name is not specified in the available project information. Confirm the model configured in the Standalone-AI service before submitting this README.
+- **Which free model it uses:** I Train the own model for the clientlocker 
 - **What happens if the AI service is not available:** The application can continue using its manual document and checklist workflow. AI suggestions are not automatically applied, and staff remain in control of checklist updates.
 
 ## My stack
