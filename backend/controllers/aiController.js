@@ -423,6 +423,14 @@ const getFileSuggestions = async (req, res) => {
     const hasAccess = await canAccessClient(user, file.client_id);
 
     if (!hasAccess) {
+      await recordActivity({
+        personId: user._id,
+        clientId: file.client_id,
+        fileId: file._id,
+        action: "ACCESS_BLOCKED",
+        blocked: true
+      });
+
       return res.status(403).json({
         success: false,
         message: "You do not have access to this document."
@@ -532,6 +540,14 @@ const approveSuggestion = async (req, res) => {
     const hasAccess = await canAccessClient(user, suggestion.client_id);
 
     if (!hasAccess) {
+      await recordActivity({
+        personId: user._id,
+        clientId: suggestion.client_id,
+        fileId: suggestion.file_id || null,
+        action: "ACCESS_BLOCKED",
+        blocked: true
+      });
+
       return res.status(403).json({
         success: false,
         message: "You do not have permission to review suggestions for this client."
@@ -669,6 +685,14 @@ const rejectSuggestion = async (req, res) => {
     const hasAccess = await canAccessClient(user, suggestion.client_id);
 
     if (!hasAccess) {
+      await recordActivity({
+        personId: user._id,
+        clientId: suggestion.client_id,
+        fileId: suggestion.file_id || null,
+        action: "ACCESS_BLOCKED",
+        blocked: true
+      });
+
       return res.status(403).json({
         success: false,
         message: "You do not have permission to review suggestions for this client."

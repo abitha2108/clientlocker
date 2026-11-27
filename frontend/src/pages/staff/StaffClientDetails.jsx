@@ -41,8 +41,12 @@ export default function StaffClientDetails() {
       setClient(null);
       setFiles([]);
 
-      // Fetch clients available to the logged-in staff member.
-      const clientResponse = await apiRequest("/api/clients");
+      // Fetch clients and client files in parallel so direct URL access
+      // always hits the backend client-access boundary and logs blocked attempts.
+      const [clientResponse, fileResponse] = await Promise.all([
+        apiRequest("/api/clients"),
+        getClientFiles(clientId)
+      ]);
 
       const clients = Array.isArray(clientResponse.clients)
         ? clientResponse.clients
@@ -59,9 +63,6 @@ export default function StaffClientDetails() {
       }
 
       setClient(selectedClient);
-
-      // Fetch files for this client.
-      const fileResponse = await getClientFiles(clientId);
 
       if (!Array.isArray(fileResponse.files)) {
         throw new Error("Unable to read the client's document list.");

@@ -6,6 +6,7 @@ const Client = require("../models/Client");
 const ClientAccess = require("../models/ClientAccess");
 const Person = require("../models/Person");
 const MagicLink = require("../models/MagicLink");
+const ActivityLog = require("../models/ActivityLog");
 
 const { sendMagicLinkEmail } = require("../services/emailService");
 
@@ -618,6 +619,17 @@ const assignClient = async (req, res) => {
       given_by: req.user._id
     });
 
+    try {
+      await ActivityLog.create({
+        person_id: req.user._id,
+        client_id: client._id,
+        action: "ACCESS_GRANTED",
+        blocked: false
+      });
+    } catch (logErr) {
+      console.error("Assign client activity logging error:", logErr.message);
+    }
+
     return res.status(201).json({
       success: true,
       message: `${person.name} (${person.role}) assigned successfully.`,
@@ -798,6 +810,17 @@ const removeClientAssignment = async (req, res) => {
         success: false,
         message: "Client assignment not found."
       });
+    }
+
+    try {
+      await ActivityLog.create({
+        person_id: req.user._id,
+        client_id: client._id,
+        action: "ACCESS_REMOVED",
+        blocked: false
+      });
+    } catch (logErr) {
+      console.error("Remove assignment activity logging error:", logErr.message);
     }
 
     return res.status(200).json({

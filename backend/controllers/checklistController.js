@@ -4,8 +4,23 @@ const mongoose = require("mongoose");
 const ChecklistItem = require("../models/ChecklistItem");
 const Client = require("../models/Client");
 const ClientAccess = require("../models/ClientAccess");
+const ActivityLog = require("../models/ActivityLog");
 
 const AUDITOR_MAX_CLIENTS = 2;
+
+const logBlockedChecklistAccess = async (user, clientId) => {
+  if (!user?._id) return;
+  try {
+    await ActivityLog.create({
+      person_id: user._id,
+      client_id: mongoose.Types.ObjectId.isValid(clientId) ? clientId : null,
+      action: "ACCESS_BLOCKED",
+      blocked: true
+    });
+  } catch (error) {
+    console.error("Checklist blocked access logging error:", error.message);
+  }
+};
 
 // ==========================================
 // CHECK WHETHER USER CAN ACCESS CLIENT
@@ -71,6 +86,7 @@ const getClientChecklist = async (req, res) => {
     const allowed = await canAccessClient(req.user, clientId);
 
     if (!allowed) {
+      await logBlockedChecklistAccess(req.user, clientId);
       return res.status(403).json({
         success: false,
         message: "You do not have access to this client's checklist."
@@ -134,6 +150,7 @@ const updateChecklistItem = async (req, res) => {
     );
 
     if (!allowed) {
+      await logBlockedChecklistAccess(req.user, item.client_id);
       return res.status(403).json({
         success: false,
         message: "You do not have permission to update this checklist."

@@ -1,661 +1,188 @@
-# 🔐 ClientLocker – Secure Client Document Management System
+# ClientLocker – Secure Client Document Management System
 
-<p align="center">
-  <strong>Your Documents. Our Priority.</strong>
-</p>
+ClientLocker is a secure client document management portal that helps accounting firms manage client documents, control user access, and organize financial records.
 
-<p align="center">
-  A modern and secure client document management portal for accounting firms.
-</p>
+**Live link:** https://clientlocker-theta.vercel.app/
 
-<p align="center">
-  <a href="https://clientlocker-theta.vercel.app/"><strong>🌐 Visit Live Website</strong></a>
-</p>
+## Recordings
 
----
+- **Working Application Flow:** https://drive.google.com/file/d/1KEHHSRG7wIo6-Or9x9akIGTmm3WYTKvi/view?usp=sharing
+- **AI Workflow Demonstration:** https://drive.google.com/file/d/1KMTM9E4BvcueFyMmH3Dv3oAcKQFgCGWC/view?usp=sharing
 
-## 🚀 Live Demo
+## Test logins
 
-**Production Website:** [https://clientlocker-theta.vercel.app/](https://clientlocker-theta.vercel.app/)
+All accounts below are made-up demonstration accounts created through the project seed data.
 
-## Drive Link
+**Common password:** `ClientLocker@2026`
 
-**Working Flow**
-
-[https://drive.google.com/file/d/1KEHHSRG7wIo6-Or9x9akIGTmm3WYTKvi/view?usp=sharing]
-
-**AI Future video**
-[https://drive.google.com/file/d/1KMTM9E4BvcueFyMmH3Dv3oAcKQFgCGWC/view?usp=sharing]
-
-## 📌 Project Overview
-
-ClientLocker is a private client document management system developed for **Vaigai Vel & Associates**, an accounting firm in Madurai, Tamil Nadu.
-
-The platform helps accounting firms securely upload, organize, manage, and access confidential client documents through a centralized portal.
-
-It provides role-based access control to ensure users can access only the documents and client information they are authorized to view. It also includes an AI-assisted document checklist suggestion workflow that helps staff identify which checklist requirement an uploaded document may satisfy.
-
-## 🎯 Project Objectives
-
-- Securely manage confidential client documents.
-- Organize financial, tax, and business records.
-- Provide role-based access control.
-- Manage staff and client assignments.
-- Enable secure document sharing.
-- Maintain activity records.
-- Provide controlled auditor access.
-- Improve document management efficiency.
-- Assist staff with AI-powered document classification and checklist matching.
-- Keep important document decisions under human review and approval.
-
-## 👥 User Roles
-
-| Role | Responsibilities |
-|---|---|
-| Partner | Manage clients, staff assignments and document access |
-| Staff | Manage documents for assigned clients |
-| Client | Access authorized personal documents |
-| Auditor | Review documents belonging to assigned clients |
-
-## ✨ Key Features
-
-- Modern public landing page.
-- Responsive user interface.
-- User authentication.
-- Role-based dashboards.
-- Client management.
-- Secure document upload and management.
-- Financial document organization.
-- Tax document management.
-- Business record management.
-- Staff-client assignments.
-- Activity logging.
-- Secure magic-link client access.
-- Temporary document download links.
-- AI-powered document checklist suggestions.
-- AI-assisted document classification and checklist matching.
-- Confidence score and match explanation for AI suggestions.
-- Pending suggestion review workflow for authorized staff.
-- Manual approval and rejection of AI suggestions.
-- Checklist update after an authorized approval.
-- AI suggestion and review activity logging.
-- Duplicate-review protection.
-
-**Feature availability depends on milestone implementation. M3 features are separate from the M2 submission.**
-
----
-
-# 🤖 AI-Powered Document Checklist Assistance
-
-ClientLocker integrates with a separately deployed **Standalone-AI microservice** built with Python and FastAPI. The AI service is kept independent from the ClientLocker application and communicates with the ClientLocker backend through authenticated server-to-server API requests.
-
-### AI Workflow
-
-1. An authorized staff member uploads a client document.
-2. Staff selects **AI Suggest** for the uploaded document.
-3. The ClientLocker backend securely processes the document and extracts supported text.
-4. The backend sends the required document information to the Standalone-AI microservice.
-5. The AI analyzes the document and compares it with the client's open checklist requirements.
-6. The AI returns a suggested checklist item, confidence score, and matching explanation.
-7. ClientLocker stores the suggestion with a **Pending** status.
-8. Authorized staff reviews the suggestion and chooses to approve or reject it.
-9. The checklist is updated only after an authorized human approval.
-10. The generation and review actions are recorded in the activity log.
-
-### AI Capabilities
-
-- PDF text extraction for supported text-based PDFs.
-- Document keyword and type matching.
-- Month and document requirement matching.
-- Checklist item suggestion.
-- Confidence score and match-reason display.
-- Pending, approved, and rejected suggestion states.
-- Manual staff approval and rejection.
-- Duplicate-review protection.
-- Activity logging for AI suggestion generation and decisions.
-- Manual checklist workflow remains available if AI processing fails.
-
-### Human-in-the-Loop Safeguard
-
-**AI suggestions do not automatically complete checklist items.**
-
-Every suggestion is stored as pending and requires an authorized staff member to review it. The checklist is updated only after approval. Rejection leaves the checklist unchanged.
-
-This keeps accounting document decisions under human control.
-
-### AI Service Architecture
-
-```text
-ClientLocker React Frontend
-          |
-          v
-ClientLocker Node.js / Express Backend
-          |
-          | Authenticated server-to-server request
-          v
-Standalone-AI FastAPI Microservice
-          |
-          v
-Document Classification & Checklist Matching
-          |
-          v
-ClientLocker Backend
-          |
-          v
-MongoDB — Pending AI Suggestion
-          |
-          v
-Authorized Staff Review
-          |
-          +---- Approve ----> Update Checklist
-          |
-          +---- Reject -----> Keep Checklist Unchanged
-          |
-          v
-Activity Log
-```
-
-### AI Integration Verification
-
-The live integration verification report dated **20 November 2026** recorded the following workflow results:
-
-| Verification | Observed result |
-|---|---|
-| Authenticated AI suggestion request | HTTP 201 Created |
-| Sample document | `March_Bank_Statement.pdf` |
-| Suggested checklist item | March bank statement |
-| Match score | 100 |
-| Initial suggestion status | `pending` |
-| Checklist before approval | `done: false` |
-| Manual approval | HTTP 200 OK |
-| Checklist after approval | `done: true` |
-| Duplicate approval attempt | HTTP 400 — already reviewed |
-| Audit events | `AI_SUGGESTION_GENERATED` and `AI_SUGGESTION_APPROVED` |
-
-These results describe the specific live workflow recorded in the verification report. They are not a claim that every possible document type or failure scenario has been tested.
-
-### AI Security and Configuration
-
-The Standalone-AI service remains a separate microservice. The AI API key is stored only in the ClientLocker backend environment and must never be exposed in frontend code, browser storage, public API responses, screenshots, or Git commits.
-
-Backend environment variables:
-
-```env
-AI_SERVICE_URL=https://standalone-ai-clientlocker.onrender.com
-AI_SERVICE_API_KEY=your_matching_standalone_ai_secret
-AI_SERVICE_TIMEOUT_MS=60000
-```
-
-Use the same secret configured in the Standalone-AI service. Do not commit real secrets or `.env` files to GitHub.
-
----
-
-# 📦 M2 Submission – Core Application Flow
-
-**Milestone:** M2 – Tool Online with One Complete Flow Working
-
-**Submission Date:** 13 November 2026
-
-The M2 milestone focuses on implementing the core ClientLocker workflow, including database setup, authentication, role-based dashboards, client document uploads, file listing, and opening uploaded documents.
-
-## 1. Database and Seed Data
-
-The application uses MongoDB to store application data.
-
-The database is populated with made-up demonstration data.
-
-**Seeded records:**
-
-| Entity | Number of Records |
-|---|---:|
-| Firm | 1 |
-| Partners | 2 |
-| Staff | 6 |
-| Clients | 10 |
-| Client login accounts | 10 |
-| Auditor | 1 |
-| Checklist items | 50 |
-
-**Firm Name:** Vaigai Vel & Associates
-
-The seed script also creates staff-client assignments and auditor access to two clients.
-
-## 2. Authentication and Role-Based Access
-
-The application supports email and password authentication for the following M2 roles:
-
-- Partner
-- Staff
-- Client
-
-After successful login, users are directed to their respective dashboards based on their authenticated role.
-
-| Role | Dashboard |
-|---|---|
-| Partner | Partner Dashboard |
-| Staff | Staff Dashboard |
-| Client | Client Dashboard |
-
-The backend determines the authenticated user's role rather than trusting a role supplied by the frontend.
-
-## 3. Document Upload and Management
-
-ClientLocker supports uploading the following document formats:
-
-| File Type | Supported |
-|---|---|
-| PDF | Yes |
-| JPG | Yes |
-| PNG | Yes |
-
-**Upload restrictions:**
-
-- Maximum file size: 4 MB.
-- Files are stored in private storage.
-- Uploaded files are associated with the relevant client.
-- File type and file size are validated.
-
-## 4. Client File Listing
-
-Each client has a file listing displaying:
-
-- Document filename.
-- Name of the person who uploaded the document.
-- Upload date.
-
-Authorized users can access the relevant client documents through the application.
-
-## 5. Complete M2 Demonstration Flow
-
-The M2 demonstration covers the following workflow:
-
-1. Open the ClientLocker production website.
-2. Log in using a test account.
-3. Access the appropriate role-based dashboard.
-4. Open a client record.
-5. Upload a sample PDF, JPG, or PNG document.
-6. View the uploaded document in the client file list.
-7. Open the uploaded document.
-
-## 6. M2 Test Login Credentials
-
-The following accounts are created by the database seed script and can be used for demonstration.
-
-**Common Demo Password for All Accounts:**
-
-```text
-ClientLocker@2026
-```
-
-### Partner Accounts
-
-| Name | Email | Password |
+| Role | Email | Password |
 |---|---|---|
-| Kavitha Vel | kavitha.partner@clientlocker.test | ClientLocker@2026 |
-| Arun Vel | arun.partner@clientlocker.test | ClientLocker@2026 |
+| Partner | kavitha.partner@clientlocker.test | ClientLocker@2026 |
+| Partner | arun.partner@clientlocker.test | ClientLocker@2026 |
+| Staff | priya.staff@clientlocker.test | ClientLocker@2026 |
+| Staff | karthik.staff@clientlocker.test | ClientLocker@2026 |
+| Staff | divya.staff@clientlocker.test | ClientLocker@2026 |
+| Staff | suresh.staff@clientlocker.test | ClientLocker@2026 |
+| Staff | meena.staff@clientlocker.test | ClientLocker@2026 |
+| Staff | gokul.trainee@clientlocker.test | ClientLocker@2026 |
+| Client | aadhavan.traders.client@clientlocker.test | ClientLocker@2026 |
+| Client | meenakshi.textiles.client@clientlocker.test | ClientLocker@2026 |
+| Client | pandian.exports.client@clientlocker.test | ClientLocker@2026 |
+| Client | vaigai.foods.client@clientlocker.test | ClientLocker@2026 |
+| Client | thamarai.engineering.client@clientlocker.test | ClientLocker@2026 |
+| Client | kurinji.enterprises.client@clientlocker.test | ClientLocker@2026 |
+| Client | marutham.agencies.client@clientlocker.test | ClientLocker@2026 |
+| Client | annamalai.stores.client@clientlocker.test | ClientLocker@2026 |
+| Client | chola.packaging.client@clientlocker.test | ClientLocker@2026 |
+| Client | ponni.agro.products.client@clientlocker.test | ClientLocker@2026 |
+| Auditor | senthil.auditor@clientlocker.test | ClientLocker@2026 |
 
-### Staff Accounts
+## What it does
 
-| Name | Email | Password |
+1. Allows users to log in and access dashboards according to their roles: Partner, Staff, Client, and Auditor.
+2. Allows authorized users to manage client records and staff-client assignments.
+3. Allows staff to upload PDF, JPG, and PNG documents with a maximum file size of 4 MB.
+4. Allows authorized users to view client documents, including filenames, uploader details, and upload dates.
+5. Provides AI-assisted document checklist suggestions that staff can review and approve or reject.
+
+## The AI feature
+
+- **What it does:** ClientLocker uses a separate Python FastAPI microservice called Standalone-AI to analyze supported document text and suggest matching client checklist requirements. It returns a suggested checklist item, confidence score, and explanation. Authorized staff must approve a suggestion before the checklist is updated.
+- **Which free model it uses:** The exact model name is not specified in the available project information. Confirm the model configured in the Standalone-AI service before submitting this README.
+- **What happens if the AI service is not available:** The application can continue using its manual document and checklist workflow. AI suggestions are not automatically applied, and staff remain in control of checklist updates.
+
+## My stack
+
+| Part | Technology | Why I used it |
 |---|---|---|
-| Priya Raman | priya.staff@clientlocker.test | ClientLocker@2026 |
-| Karthik Kumar | karthik.staff@clientlocker.test | ClientLocker@2026 |
-| Divya Raj | divya.staff@clientlocker.test | ClientLocker@2026 |
-| Suresh Balan | suresh.staff@clientlocker.test | ClientLocker@2026 |
-| Meena Joseph | meena.staff@clientlocker.test | ClientLocker@2026 |
-| Gokul Trainee | gokul.trainee@clientlocker.test | ClientLocker@2026 |
+| Frontend | React.js | To build reusable and interactive user interfaces |
+| Frontend tooling | Vite | For fast development and production builds |
+| Styling | CSS3 | To create responsive layouts and application designs |
+| Routing | React Router DOM | To navigate between application pages |
+| API communication | Axios | To communicate with the backend |
+| Animations | Framer Motion | To add interface animations |
+| Icons | Lucide React | To provide consistent interface icons |
+| Backend | Node.js and Express.js | To build API endpoints and application logic |
+| Database | MongoDB | To store users, clients, documents, and application records |
+| AI service | Python and FastAPI | To run the separate AI microservice |
+| Document storage | Cloudinary | For document storage and delivery |
+| Frontend hosting | Vercel | To deploy the frontend |
+| Backend and AI hosting | Render | To host backend and AI services |
+| Version control | Git and GitHub | To manage source code |
+| Development tools | VS Code and Antigravity | For development and AI-assisted coding |
 
-### Client Accounts
+## Main design choices
 
-| Client | Email | Password |
-|---|---|---|
-| Aadhavan Traders | aadhavan.traders.client@clientlocker.test | ClientLocker@2026 |
-| Meenakshi Textiles | meenakshi.textiles.client@clientlocker.test | ClientLocker@2026 |
-| Pandian Exports | pandian.exports.client@clientlocker.test | ClientLocker@2026 |
-| Vaigai Foods | vaigai.foods.client@clientlocker.test | ClientLocker@2026 |
-| Thamarai Engineering | thamarai.engineering.client@clientlocker.test | ClientLocker@2026 |
-| Kurinji Enterprises | kurinji.enterprises.client@clientlocker.test | ClientLocker@2026 |
-| Marutham Agencies | marutham.agencies.client@clientlocker.test | ClientLocker@2026 |
-| Annamalai Stores | annamalai.stores.client@clientlocker.test | ClientLocker@2026 |
-| Chola Packaging | chola.packaging.client@clientlocker.test | ClientLocker@2026 |
-| Ponni Agro Products | ponni.agro.products.client@clientlocker.test | ClientLocker@2026 |
+- **Role-based access:** Different dashboards and permissions are provided for Partners, Staff, Clients, and Auditors.
+- **Backend authorization:** Access decisions are enforced by the backend instead of relying only on frontend restrictions.
+- **Private document handling:** Uploaded documents are associated with the relevant client and access is restricted to authorized users.
+- **Separate AI architecture:** The AI functionality runs as an independent FastAPI microservice rather than being embedded in the React frontend.
+- **Human approval:** AI suggestions remain pending until an authorized staff member reviews them.
+- **Responsive interface:** The application uses a modern financial SaaS design with blue and purplish-blue colours, consistent typography, and responsive layouts.
+- **Made-up seed data:** Demonstration records are used instead of real customer information.
+- **Database design:** MongoDB is used for application data. Confirm the actual collection names from the backend models before listing them as database tables.
 
-### Auditor Account (M3)
+## How to run it on your computer
 
-| Name | Email | Password |
-|---|---|---|
-| Senthil Nathan | senthil.auditor@clientlocker.test | ClientLocker@2026 |
-
-All seeded Partner, Staff, Client, and Auditor accounts use this same demonstration password.
-
-**These are made-up test accounts created for the internship project. They are not real customer accounts.**
-
-## 7. M2 Screen Recording
-
-**Required:** 60-second screen recording demonstrating one complete working flow.
-
-**Recording:** [Add your Google Drive recording link here]
-
-The recording should demonstrate:
-
-- User login.
-- Role-based dashboard.
-- Client document upload.
-- Uploaded document appearing in the file list.
-- Opening the uploaded document.
-
-**Set Google Drive sharing to "Anyone with the link" so the reviewer can access the recording.**
-
----
-
-## 🛠️ Technology Stack
-
-### Frontend
-
-- React.js
-- Vite
-- JavaScript
-- CSS3
-- React Router DOM
-- Axios
-- Framer Motion
-- Lucide React
-
-### Backend
-
-- Node.js
-- Express.js
-
-### Database
-
-- MongoDB
-
-### AI Integration
-
-- Python
-- FastAPI
-- Standalone-AI microservice
-- Authenticated backend-to-service API communication
-- PDF text extraction and checklist matching
-
-### Tools and Deployment
-
-- GitHub – Version Control
-- Vercel – Frontend Hosting
-- Render – Backend Hosting
-- Visual Studio Code – Development Environment
-- Antigravity – AI-Assisted Development
-- Cloudinary – Private document storage and delivery
-
-## 📂 Project Structure
-
-```text
-clientlocker/
-│
-├── backend/
-│   ├── config/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── controllers/
-│   ├── services/
-│   ├── scripts/
-│   └── server.js
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   │   ├── common/
-│   │   │   └── layout/
-│   │   ├── context/
-│   │   ├── pages/
-│   │   │   ├── public/
-│   │   │   ├── auth/
-│   │   │   ├── partner/
-│   │   │   ├── staff/
-│   │   │   └── auditor/
-│   │   ├── services/
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   ├── index.css
-│   │   └── main.jsx
-│   ├── package.json
-│   ├── package-lock.json
-│   └── vite.config.js
-│
-├── docs/
-└── README.md
-```
-
-**Note:** The Standalone-AI microservice is maintained separately and is not included inside this repository.
-
-## ⚙️ Installation and Setup
-
-### Prerequisites
-
-- Node.js
-- npm
-- Git
-- MongoDB
-
-### 1. Clone Repository
+Clone the repository:
 
 ```bash
 git clone https://github.com/abitha2108/clientlocker.git
+cd clientlocker
 ```
 
-### 2. Navigate to Frontend
+Install and start the backend:
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+Open another terminal and start the frontend:
 
 ```bash
 cd clientlocker/frontend
-```
-
-### 3. Install Dependencies
-
-```bash
 npm install
-```
-
-### 4. Configure Frontend Environment Variables
-
-Create a `.env` file inside the frontend folder.
-
-```env
-VITE_API_BASE_URL=http://localhost:5000
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-```
-
-Use your configured backend URL and Google Client ID where applicable.
-
-### 5. Start Frontend Development Server
-
-```bash
 npm run dev
 ```
 
-Open:
+Open the local application:
 
 ```text
 http://localhost:5173
 ```
 
-### 6. Configure Backend Environment Variables
+**Required settings (names only):**
 
-Create a `.env` file inside the backend folder.
+Backend:
+- `PORT`
+- `MONGO_URI`
+- `JWT_SECRET`
+- `FRONTEND_URL`
+- `AI_SERVICE_URL`
+- `AI_SERVICE_API_KEY`
+- `AI_SERVICE_TIMEOUT_MS`
 
-Configure the required variables:
+Frontend:
+- `VITE_API_BASE_URL`
+- `VITE_GOOGLE_CLIENT_ID`
 
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-FRONTEND_URL=http://localhost:5173
-```
+Create the required `.env` files locally and provide your own configured values. Never put real keys, passwords, or secrets in this README.
 
-Add any additional Cloudinary, email, or Google credentials required by your backend configuration.
+## How to run the tests
 
-For AI integration, configure the following variables in the **backend environment only**:
+The exact test command depends on the scripts configured in the backend and frontend `package.json` files.
 
-```env
-AI_SERVICE_URL=https://standalone-ai-clientlocker.onrender.com
-AI_SERVICE_API_KEY=your_matching_standalone_ai_secret
-AI_SERVICE_TIMEOUT_MS=60000
-```
-
-The AI API key must match the secret configured in the separate Standalone-AI service.
-
-Never expose backend secrets in frontend environment variables. Never commit `.env` files or secret credentials to GitHub.
-
-### 7. Start Backend Development Server
-
-From the backend directory:
+Check the available scripts using:
 
 ```bash
-npm install
-npm start
+npm run
 ```
 
-Use the start script configured in your backend `package.json`.
+Run the test script configured in the relevant project directory. Replace this section with the exact test command after confirming the actual scripts.
 
-### 8. Build for Production
+## Made-up data
 
-From the frontend directory:
+ClientLocker uses fictional demonstration data created through the project's database seed script.
 
-```bash
-npm run build
-```
+The sample data includes:
 
-Production files will be generated inside the `dist` directory.
+- 1 accounting firm.
+- 2 Partner accounts.
+- 6 Staff accounts.
+- 10 Client accounts.
+- 1 Auditor account.
+- 50 checklist items.
 
----
+The demonstration firm is **Vaigai Vel & Associates**, based in Madurai, Tamil Nadu.
 
-## 🔒 Security Considerations
+All names, email addresses, client records, and demonstration information are fictional. The project does not use real customer or client records in its seeded demonstration data.
 
-- Enforce authorization on backend APIs.
-- Restrict access to assigned client records.
-- Store confidential documents in private storage.
-- Use expiring document access links.
-- Protect environment variables.
-- Record important user activities.
-- Never commit credentials or `.env` files to GitHub.
-- Use made-up test data for demonstrations.
-- Keep the Standalone-AI API key on the backend only.
-- Validate AI suggestions against the correct client's checklist.
-- Require authorized human approval before updating checklist status.
-- Prevent duplicate or concurrent review of the same suggestion.
-- Keep AI service errors from disabling the manual document workflow.
+## What works
 
-## 🎨 UI and Design
+- **Fully working:**
+  - Core application login and role-based dashboards.
+  - Client document upload and file listing.
+  - Opening uploaded documents.
+  - AI suggestion generation in the recorded verification workflow.
+  - Pending AI suggestion review and manual approval.
+  - Checklist update after approval.
+  - Duplicate-review protection in the recorded AI workflow.
 
-ClientLocker follows a modern financial SaaS design approach.
+- **Partly done:**
+  - Google OAuth configuration had one blocked/degraded notice in the reported production smoke test.
+  - The full range of AI document types and failure scenarios should be tested further.
 
-**Design highlights:**
+- **Skipped:**
+  - No additional skipped feature is confirmed in the available project information. Update this section if any required internship feature was intentionally left unimplemented.
 
-- Professional blue and purplish-blue colour identity.
-- Modern typography.
-- Responsive layouts.
-- Animated user interface.
-- Interactive document management illustration.
-- Professional navigation.
-- Clean dashboard-style components.
+## What I would do differently with more time
 
-## 🚀 Deployment
-
-The frontend application is deployed using Vercel.
-
-**Live Production URL:**
-
-[https://clientlocker-theta.vercel.app/](https://clientlocker-theta.vercel.app/)
-
-The backend application is hosted using Render.
-
-The Standalone-AI microservice is deployed separately and accessed by the ClientLocker backend through authenticated API requests.
-
-## 👨‍💻 Project Information
-
-| Detail | Information |
-|---|---|
-| Project Name | ClientLocker |
-| Client | Vaigai Vel & Associates |
-| Industry | Accounting and Document Management |
-| Location | Madurai, Tamil Nadu, India |
-| Developer | Gowtham |
-| Internship | Vizdale Full-Stack Developer Internship |
-| Development Period | November 2026 |
-| Frontend Hosting | Vercel |
-| Backend Hosting | Render |
-| Database | MongoDB |
-| AI Service | Separate Standalone-AI FastAPI Microservice |
-
-## 📈 Future Enhancements – M3 and Beyond
-
-- Server-side access restrictions for assigned clients.
-- Client magic-link authentication.
-- Temporary secure download links.
-- Activity logging and access tracking.
-- Auditor role with restricted client access.
-- AI-powered document checklist suggestions.
-- Automated document categorization.
-- Advanced audit reports.
-- Enhanced activity monitoring.
-- Additional security improvements.
-
----
-
-## 🧪 Testing and Verification Summary
-
-The following results are taken from the available project verification reports.
-
-### Live AI Workflow Verification
-
-| Test | Reported result |
-|---|---|
-| Authenticated AI suggestion request | HTTP 201 Created |
-| Document classification | 100 match score |
-| Pending status before review | Verified |
-| Checklist unchanged before approval | Verified |
-| Manual approval | HTTP 200 OK |
-| Checklist updated after approval | Verified |
-| Duplicate approval prevention | HTTP 400 |
-| AI generation and approval audit events | Recorded |
-
-### Reported Production Verification
-
-The production smoke-test report dated 20 November 2026 recorded:
-
-- 22 scenarios.
-- 21 passed.
-- 0 failed.
-- 1 blocked/degraded notice related to Google OAuth configuration.
-
-The later AI workflow verification report confirmed successful authenticated AI suggestion generation, manual approval, checklist persistence, duplicate-review protection, and audit logging.
-
-**Testing figures refer to the specific reports and test environments in which they were executed. They should not be interpreted as a single combined test run.**
-
-## 📝 M2 Submission Notes
-
-This README documents the ClientLocker project and its M2 core application flow.
-
-The M2 submission includes:
-
-- Live application.
-- Database with made-up seeded records.
-- Partner, Staff, and Client test login accounts.
-- Role-based authentication and dashboards.
-- Client document upload functionality.
-- Client file listing and opening functionality.
-- A 60-second screen recording demonstrating the complete workflow.
-
-AI-powered document checklist suggestions and other later-milestone functionality are documented separately above. Features planned for later milestones should not be considered part of the M2 submission unless implemented and tested.
-
----
-
-<p align="center">
-  <strong>ClientLocker – Your Documents. Our Priority.</strong>
-</p>
-
-<p align="center">
-  Built with ❤️ for secure and reliable document management.
-</p>
+- Improve automated testing across all user roles and permission scenarios.
+- Expand AI testing to support more document formats and different document layouts.
+- Improve error handling and monitoring for the separate AI service.
+- Add more detailed audit reports and activity filtering.
+- Improve performance and loading speed on all dashboards.
+- Strengthen security testing for document access and temporary download links.
+- Improve the user experience based on feedback from accounting staff.

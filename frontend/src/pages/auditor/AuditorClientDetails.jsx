@@ -31,8 +31,12 @@ export default function AuditorClientDetails() {
       setLoading(true);
       setError("");
 
-      // The backend must return only clients assigned to this auditor.
-      const clientResponse = await apiRequest("/api/clients");
+      // Fetch clients and client files in parallel so direct URL access
+      // always hits the backend client-access boundary and logs blocked attempts.
+      const [clientResponse, fileResponse] = await Promise.all([
+        apiRequest("/api/clients"),
+        getClientFiles(clientId)
+      ]);
 
       const clients = clientResponse.clients || [];
 
@@ -48,9 +52,6 @@ export default function AuditorClientDetails() {
       }
 
       setClient(selectedClient);
-
-      // Fetch files through the authenticated API.
-      const fileResponse = await getClientFiles(clientId);
 
       setFiles(fileResponse.files || []);
     } catch (err) {
